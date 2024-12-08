@@ -1,0 +1,8 @@
+serverPort: "8080"
+dbHost: "localhost"
+dbPort: "5432"
+dbUser: "daniarmakyev"
+dbPassword: "password"
+dbName: "postgres"
+redisHost: "localhost"
+redisPort: "6379"
