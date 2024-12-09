@@ -2,7 +2,6 @@ package usecase
 
 import (
 	"context"
-	"database/sql"
 	"fmt"
 	"myfirstBack/internal/auth/model"
 	"myfirstBack/internal/auth/repository"
@@ -17,10 +16,12 @@ func NewUserUseCase(repo repository.UserRepository) *UserUseCase {
 }
 
 func (u *UserUseCase) CreateUser(ctx context.Context, user *model.User) error {
+
 	existingUser, err := u.repo.GetUserByEmail(ctx, user.Email)
-	if err != nil && err != sql.ErrNoRows {
+	if err != nil {
 		return fmt.Errorf("error checking existing user: %v", err)
 	}
+
 	if existingUser != nil {
 		return fmt.Errorf("user with email %s already exists", user.Email)
 	}
