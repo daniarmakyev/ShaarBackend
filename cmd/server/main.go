@@ -7,5 +7,5 @@ import (
 
 func main() {
 	log.Println("Starting server...")
-	app.Run() // Запускаем приложение из internal/app
+	app.Run()
 }

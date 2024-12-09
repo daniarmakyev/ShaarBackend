@@ -10,6 +10,19 @@ import (
 	"github.com/gin-gonic/gin"
 )
 
+// @Summary Register a new user
+// @Description Register a new user with a username, email, password, and optional avatar file.
+// @Tags Authentication
+// @Accept json
+// @Produce json
+// @Param username formData string true "Username"
+// @Param email formData string true "Email"
+// @Param password formData string true "Password"
+// @Param ava formData file false "Avatar file (optional)"
+// @Success 200 {object} map[string]string "message: User created successfully"
+// @Failure 400 {object} map[string]string "error: Invalid request"
+// @Failure 500 {object} map[string]string "error: Internal server error"
+// @Router /auth/register [post]
 func RegisterAuthRoutes(router *gin.RouterGroup, useCase *usecase.UserUseCase) {
 	router.POST("/auth/register", func(c *gin.Context) {
 		username := c.PostForm("username")
@@ -20,7 +33,6 @@ func RegisterAuthRoutes(router *gin.RouterGroup, useCase *usecase.UserUseCase) {
 		var savePath string
 
 		if err == nil {
-			// Читаем MIME-тип файла
 			f, err := file.Open()
 			if err != nil {
 				c.JSON(500, gin.H{"error": "Failed to open file"})
@@ -28,14 +40,13 @@ func RegisterAuthRoutes(router *gin.RouterGroup, useCase *usecase.UserUseCase) {
 			}
 			defer f.Close()
 
-			buffer := make([]byte, 512) // 512 байт хватает для определения MIME-типа
+			buffer := make([]byte, 512)
 			_, err = f.Read(buffer)
 			if err != nil {
 				c.JSON(500, gin.H{"error": "Failed to read file"})
 				return
 			}
 
-			// Получаем MIME-тип
 			contentType := http.DetectContentType(buffer)
 			if contentType != "image/png" && contentType != "image/jpeg" {
 				c.JSON(400, gin.H{"error": "Invalid file type, only .jpg and .png are allowed"})

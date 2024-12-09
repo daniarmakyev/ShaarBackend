@@ -6,6 +6,9 @@ import (
 	"github.com/spf13/viper"
 )
 
+// LoadConfig loads the application configuration from a YAML file.
+// It reads the configuration from a file named "config.yaml" and unmarshals it into a Config struct.
+// @return *Config returns the loaded configuration.
 type Config struct {
 	ServerPort string `yaml:"serverPort"`
 	DBHost     string `yaml:"dbHost"`
@@ -17,23 +20,18 @@ type Config struct {
 	RedisPort  string `yaml:"redisPort"`
 }
 
-// Функция для загрузки конфигурации из файла config.yaml
 func LoadConfig() *Config {
-	// Устанавливаем имя и тип конфигурационного файла
 	viper.SetConfigName("config")
 	viper.SetConfigType("yaml")
 	viper.AddConfigPath(".")
 
-	// Чтение конфигурационного файла
 	if err := viper.ReadInConfig(); err != nil {
-		log.Fatalf("Ошибка при чтении конфигурационного файла: %v", err)
+		log.Fatalf("File configure error: %v", err)
 	}
 
-	// Структура для хранения конфигурации
 	var cfg Config
-	// Декодируем конфигурацию в структуру
 	if err := viper.Unmarshal(&cfg); err != nil {
-		log.Fatalf("Невозможно декодировать конфигурацию в структуру: %v", err)
+		log.Fatalf("Unable to decode configuration into structure: %v", err)
 	}
 
 	return &cfg
